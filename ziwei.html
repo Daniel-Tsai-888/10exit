@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <title>紫微牌卡抽牌程式</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      background-color: #fcf4de; /* 柔和淺黃色背景 */
+      text-align: center;
+    }
+    h1, p {
+      margin: 10px 0;
+    }
+    button {
+      font-size: 16px;
+      padding: 10px 20px;
+      cursor: pointer;
+    }
+
+    /* 結果區塊：使用 Flex 並排 */
+    #cardResult {
+      display: none; /* 預設隱藏，抽牌後顯示 */
+      margin: 20px auto;
+      max-width: 900px;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      gap: 50px; /* 三張牌間距 */
+    }
+
+    /* 每個卡片區域含標題 + 白色框 */
+    .card-section {
+      flex: 1 1 0;
+      min-width: 0;
+    }
+
+    /* 白框：只呈現卡名 + 正逆位 */
+    .card-box {
+      background-color: #fff;  /* 卡片背景 */
+      border: 1px solid #ccc;  /* 卡片邊框 */
+      padding: 20px;
+      margin-top: 8px;         /* 與標題稍微間隔 */
+    }
+
+    .card-label {
+      font-size: 16px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .card-info {
+      font-size: 16px;
+      font-weight: bold;
+      color: #333;
+      margin: 0;
+    }
+
+    footer {
+      margin-top: 40px;
+      color: #555;
+    }
+    footer a {
+      text-decoration: none;
+      color: #555;
+    }
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* 下拉式選單的樣式可依需求調整 */
+    #divinationType {
+      font-size: 14px;
+      padding: 5px 10px;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>紫微牌卡</h1>
+
+  <!-- 下拉式占卜選項 -->
+  <select id="divinationType">
+    <option value="" disabled selected>請選擇占卜問題</option>
+    <option value="事業">事業（自行創業）</option>
+    <option value="工作">工作（受僱性質）</option>
+    <option value="愛情">愛情（指有伴侶或有特定對象詢問）</option>
+    <option value="桃花">桃花（指單身或無特定對象詢問）</option>
+    <option value="整體運">整體運（近三個月）</option>
+  </select>
+
+  <!-- 提示文字：同一行 -->
+  <p>請靜心默唸占卜的問題三次後，請點選抽牌。</p>
+
+  <!-- 抽牌按鈕 -->
+  <button onclick="drawCards()">抽牌</button>
+
+  <!-- 抽牌結果 (三張卡) -->
+  <div id="cardResult">
+    <!-- 主星 / 雙星 -->
+    <div class="card-section">
+      <div class="card-label">主星 / 雙星</div>
+      <div class="card-box">
+        <p class="card-info" id="starInfo"></p>
+      </div>
+    </div>
+    <!-- 輔星 -->
+    <div class="card-section">
+      <div class="card-label">輔星</div>
+      <div class="card-box">
+        <p class="card-info" id="supportInfo"></p>
+      </div>
+    </div>
+    <!-- 十二長生 -->
+    <div class="card-section">
+      <div class="card-label">十二長生</div>
+      <div class="card-box">
+        <p class="card-info" id="changShengInfo"></p>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    由 <a href="https://wavetarot10exit.pixnet.net/blog" target="_blank">十號出口</a> 提供
+  </footer>
+
+  <script>
+    /*************************************************************
+     * 牌組資料：
+     * 1) 十四主星（正/逆位）
+     * 2) 雙星（正/逆位 + 空宮牌）
+     * 3) 輔星（正/逆位）
+     * 4) 十二長生（正/逆位）
+     *************************************************************/
+
+    // 1) 十四主星牌（有正 / 逆）
+    const mainStars = [
+      { group: "主星", name: "紫微", orientation: "正位" },
+      { group: "主星", name: "紫微", orientation: "逆位" },
+      { group: "主星", name: "天機", orientation: "正位" },
+      { group: "主星", name: "天機", orientation: "逆位" },
+      { group: "主星", name: "太陽", orientation: "正位" },
+      { group: "主星", name: "太陽", orientation: "逆位" },
+      { group: "主星", name: "天同", orientation: "正位" },
+      { group: "主星", name: "天同", orientation: "逆位" },
+      { group: "主星", name: "廉貞", orientation: "正位" },
+      { group: "主星", name: "廉貞", orientation: "逆位" },
+      { group: "主星", name: "武曲", orientation: "正位" },
+      { group: "主星", name: "武曲", orientation: "逆位" },
+      { group: "主星", name: "破軍", orientation: "正位" },
+      { group: "主星", name: "破軍", orientation: "逆位" },
+      { group: "主星", name: "天府", orientation: "正位" },
+      { group: "主星", name: "天府", orientation: "逆位" },
+      { group: "主星", name: "太陰", orientation: "正位" },
+      { group: "主星", name: "太陰", orientation: "逆位" },
+      { group: "主星", name: "貪狼", orientation: "正位" },
+      { group: "主星", name: "貪狼", orientation: "逆位" },
+      { group: "主星", name: "巨門", orientation: "正位" },
+      { group: "主星", name: "巨門", orientation: "逆位" },
+      { group: "主星", name: "天相", orientation: "正位" },
+      { group: "主星", name: "天相", orientation: "逆位" },
+      { group: "主星", name: "天梁", orientation: "正位" },
+      { group: "主星", name: "天梁", orientation: "逆位" },
+      { group: "主星", name: "七殺", orientation: "正位" },
+      { group: "主星", name: "七殺", orientation: "逆位" }
+    ];
+
+    // 2) 雙星牌（有正逆位），含空宮牌
+    const doubleStarsRaw = [
+      "紫微七殺","紫微破軍","紫微貪狼","紫微天府","紫微天相",
+      "天機巨門","天機太陰","天機天梁","天同巨門","天同天梁",
+      "太陽太陰","太陽天梁","廉貞七殺","廉貞破軍","廉貞貪狼",
+      "廉貞天相","廉貞天府","武曲七殺","武曲破軍","武曲貪狼",
+      "武曲天相","武曲天府","太陰天同","巨門太陽","空宮牌"
+    ];
+    const doubleStars = doubleStarsRaw.flatMap(name => ([
+      { group: "雙星", name, orientation: "正位" },
+      { group: "雙星", name, orientation: "逆位" }
+    ]));
+
+    // 將主星 + 雙星 合併為「starCards」
+    const starCards = [...mainStars, ...doubleStars];
+
+    // 3) 輔星牌組（有正逆位）
+    const supportStarsRaw = [
+      "擎羊","陀羅","鈴星","火星","天刑",
+      "空劫（地空、地劫）","祿存","鸞喜（紅鸞、天喜）",
+      "化祿","化權","化科","化忌","陰煞",
+      "左輔","右弼","文昌","文曲","天魁","天鉞"
+    ];
+    const supportCards = supportStarsRaw.flatMap(name => ([
+      { group: "輔星", name, orientation: "正位" },
+      { group: "輔星", name, orientation: "逆位" }
+    ]));
+
+    // 4) 十二長生牌組（有正/逆位）
+    const changShengCardsRaw = [
+      "長生","沐浴","冠帶","臨官","帝旺",
+      "衰","病","死","墓","絕","胎","養"
+    ];
+    // 為每個十二長生牌增加「正位、逆位」
+    const changShengCards = changShengCardsRaw.flatMap(name => ([
+      { group: "十二長生", name, orientation: "正位" },
+      { group: "十二長生", name, orientation: "逆位" }
+    ]));
+
+    /**
+     * 從陣列中隨機抽一張
+     */
+    function pickRandom(array) {
+      const randomIndex = Math.floor(Math.random() * array.length);
+      return array[randomIndex];
+    }
+
+    /**
+     * 一次抽牌 (主星/雙星 + 輔星 + 十二長生)
+     */
+    function drawCards() {
+      // 1. 抽 1 張「主星 / 雙星」
+      const starCard = pickRandom(starCards);
+      // 2. 抽 1 張「輔星」
+      const supportCard = pickRandom(supportCards);
+      // 3. 抽 1 張「十二長生」
+      const changShengCard = pickRandom(changShengCards);
+
+      // 顯示 【卡名 + (正/逆位)】
+      const starText = starCard.name + 
+        (starCard.orientation ? ` (${starCard.orientation})` : "");
+      const supportText = supportCard.name +
+        (supportCard.orientation ? ` (${supportCard.orientation})` : "");
+      const changShengText = changShengCard.name +
+        (changShengCard.orientation ? ` (${changShengCard.orientation})` : "");
+
+      // 更新網頁文字
+      document.getElementById("starInfo").textContent = starText;
+      document.getElementById("supportInfo").textContent = supportText;
+      document.getElementById("changShengInfo").textContent = changShengText;
+
+      // 顯示結果區塊
+      document.getElementById("cardResult").style.display = "flex";
+    }
+  </script>
+</body>
+</html>
