@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>愛情浪漫神諭卡</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #fff;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            color: #808080;
+        }
+        .card-container {
+            padding: 15px;
+            background-color: #ffeeee;
+            border-radius: 10px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+            font-size: 18px;
+            text-align: center;
+            width: 180px;
+            white-space: nowrap; /* 讓牌義保持在同一行 */
+        }
+        .buttons {
+            margin: 20px 0;
+        }
+        button {
+            background-color: #e0f7fa;
+            color: #333;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            margin: 5px;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #b2ebf2;
+        }
+        #result {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 20px; /* 調整卡片之間的間距 */
+            flex-wrap: wrap;
+        }
+        .footer {
+            margin-top: 30px;
+            font-size: 14px;
+        }
+        .footer a {
+            color: #5DADE2;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>💖 愛情浪漫神諭卡 💖</h1>
+
+    <div class="buttons">
+        <button onclick="drawCards(1)">一張</button>
+        <button onclick="drawCards(3)">三張</button>
+    </div>
+
+    <div id="result"></div>
+
+    <div class="footer">
+        由 <a href="https://wavetarot10exit.pixnet.net/blog" target="_blank">十號出口</a> 提供
+    </div>
+
+    <script>
+        const cards = [
+            { meaning: "配合對方的情緒起伏", time: "二月" },
+            { meaning: "告別慣性", time: "六月" },
+            { meaning: "靈魂伴侶／雙胞胎般的熱情戀人", time: "三個月" },
+            { meaning: "精神上的靈魂伴侶", time: "四天" },
+            { meaning: "戒指／禮物", time: "七天" },
+            { meaning: "物質／金錢障礙", time: "九週" },
+            { meaning: "業報的記憶阻撓", time: "六個月" },
+            { meaning: "這個人不是你的靈魂伴侶", time: "四月" },
+            { meaning: "現有關係出現正面的變化", time: "八月" },
+            { meaning: "計畫實現", time: "下個月" },
+            { meaning: "搬家／換城市", time: "明天" },
+            { meaning: "感情上癮", time: "七個月" },
+            { meaning: "遷移／地理距離", time: "下個月15 日" },
+            { meaning: "年齡差異", time: "夏季" },
+            { meaning: "你必須遠離", time: "一年" },
+            { meaning: "孩子", time: "一月" },
+            { meaning: "水乳交融", time: "十二月" },
+            { meaning: "金髮男子／女子", time: "一個半月" },
+            { meaning: "棕髮男子／女子", time: "三週" },
+            { meaning: "自由意志", time: "三月" },
+            { meaning: "假象", time: "五月" },
+            { meaning: "別聽旁人的話", time: "滿月" },
+            { meaning: "即將到來的新邂逅", time: "三天" },
+            { meaning: "離婚的人", time: "秋季" },
+            { meaning: "家庭負擔", time: "九個月" },
+            { meaning: "理解你的靈魂伴侶", time: "冬季" },
+            { meaning: "守口如瓶／祕而不宣的關係", time: "七月" },
+            { meaning: "外出時的巧遇", time: "下週末" },
+            { meaning: "工作帶來的偶遇", time: "五天" },
+            { meaning: "電信引發的相遇", time: "現在" },
+            { meaning: "共時性巧合的邂逅", time: "下週" },
+            { meaning: "重複循環的藍圖", time: "春季" },
+            { meaning: "決裂", time: "兩個月" },
+            { meaning: "驚喜", time: "新月" },
+            { meaning: "你無端疑惑／恐懼", time: "九月" },
+            { meaning: "你的靈魂伴侶目前沒有進入狀況", time: "四個月" },
+            { meaning: "當前一切都在變動", time: "下一季" },
+            { meaning: "你已經認識你的靈魂伴侶", time: "十五天" },
+            { meaning: "你還沒有準備", time: "十天" },
+            { meaning: "你已經收到徵兆", time: "明年" },
+            { meaning: "有另一個人干擾這段關係", time: "五個月" },
+            { meaning: "共同生活", time: "八個月" }
+        ];
+
+        function drawCards(num) {
+            let shuffled = cards.sort(() => Math.random() - 0.5);
+            let selected = shuffled.slice(0, num);
+            
+            let resultHTML = selected.map(card => `
+                <div class="card-container">
+                    <strong><span style="white-space: nowrap;">${card.meaning}</span> </strong><br>
+                    <em>📅 ${card.time}</em>
+                </div>
+            `).join("");
+
+            document.getElementById("result").innerHTML = resultHTML;
+        }
+    </script>
+
+</body>
+</html>

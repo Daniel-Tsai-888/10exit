@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>人生使命神諭卡</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f8f8f8;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        .button-container {
+            margin-bottom: 20px;
+        }
+        button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .card-container {
+            padding: 15px;
+            background-color: #dff3ff; /* 淡藍色 */
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 200px;
+        }
+        .card-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #444;
+        }
+        .card-time {
+            font-size: 16px;
+            color: #666;
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #555;
+        }
+        .footer a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🌟 人生使命神諭卡 🌟</h1>
+    <p>選擇抽牌數量，獲取你的指引！</p>
+
+    <div class="button-container">
+        <button onclick="drawCard(1)">一張</button>
+        <button onclick="drawCard(3)">三張</button>
+    </div>
+
+    <div class="result-container" id="cardResults"></div>
+
+    <div class="footer">
+        由 <a href="https://wavetarot10exit.pixnet.net/blog" target="_blank" rel="noopener noreferrer">十號出口</a> 提供
+    </div>
+
+    <script>
+        const cards = [
+            { title: "來自某個人的幫助", time: "六個月" },
+            { title: "過勞", time: "外在的延誤" },
+            { title: "轉換跑道", time: "一月" },
+            { title: "買賣", time: "三週" },
+            { title: "困惑", time: "兩天" },
+            { title: "書面手續", time: "下個月15日" },
+            { title: "遷移", time: "五月" },
+            { title: "努力", time: "兩個月" },
+            { title: "自我", time: "四個月" },
+            { title: "家族企業", time: "一個半月" },
+            { title: "意外事件／挑戰", time: "七月" },
+            { title: "虛假的承諾", time: "下個月" },
+            { title: "培訓／實習", time: "明天" },
+            { title: "高階職務", time: "十月" },
+            { title: "機構裡的獨立個體", time: "五個月" },
+            { title: "嫉妒", time: "秋季" },
+            { title: "人間天使", time: "自由意志" },
+            { title: "建築師", time: "八個月" },
+            { title: "睿智清明的啟迪者", time: "九月" },
+            { title: "薩滿靈媒", time: "新月" },
+            { title: "傳播者", time: "下週" },
+            { title: "教育戰士", time: "八月" },
+            { title: "療癒鬥士", time: "十一月" },
+            { title: "領袖", time: "冬季" },
+            { title: "博學者", time: "已經" },
+            { title: "療癒者", time: "二月" },
+            { title: "擺渡人", time: "現在" },
+            { title: "夢想家", time: "內心的延宕" },
+            { title: "研究員", time: "明年" },
+            { title: "光的捍衛者", time: "六月" },
+            { title: "歧路", time: "下個月30日" },
+            { title: "缺乏定性", time: "十五天" },
+            { title: "契機", time: "三個月" },
+            { title: "倉促", time: "十二月" },
+            { title: "從「心」規劃", time: "滿月" },
+            { title: "晉升", time: "四月" },
+            { title: "保護", time: "九個月" },
+            { title: "電信網路", time: "夏季" },
+            { title: "成功／豐裕", time: "下一季" },
+            { title: "表面工夫", time: "七個月" },
+            { title: "共同作業", time: "春季" },
+            { title: "你耽擱了", time: "三月" }
+        ];
+
+        function drawCard(num) {
+            let selectedCards = [];
+            let usedIndices = new Set();
+
+            while (selectedCards.length < num) {
+                let randomIndex = Math.floor(Math.random() * cards.length);
+                if (!usedIndices.has(randomIndex)) {
+                    selectedCards.push(cards[randomIndex]);
+                    usedIndices.add(randomIndex);
+                }
+            }
+
+            let resultContainer = document.getElementById("cardResults");
+            resultContainer.innerHTML = ""; 
+
+            selectedCards.forEach(card => {
+                let cardDiv = document.createElement("div");
+                cardDiv.className = "card-container";
+                cardDiv.innerHTML = `
+                    <div class="card-title">🔮 ${card.title} </div>
+                    <div class="card-time">🕰️ ${card.time}</div>
+                `;
+                resultContainer.appendChild(cardDiv);
+            });
+        }
+    </script>
+
+</body>
+</html>
